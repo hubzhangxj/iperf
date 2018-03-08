@@ -1,0 +1,4 @@
+- name: start server
+  shell: "cd /tmp/iperf/src && ./iperf3 -s &"
+  async: 5
+  ignore_errors: yes

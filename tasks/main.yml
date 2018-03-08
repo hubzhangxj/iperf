@@ -1,0 +1,5 @@
+- include: install_iperf.yml
+  when: install_iperf | bool
+
+- include: run_iperf_server.yml
+  when: run_server | bool
