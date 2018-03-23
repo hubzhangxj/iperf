@@ -1,0 +1,30 @@
+- name: run iperf on SlaveDevice
+  hosts: SlaveDevice
+  roles:
+    - { role: ../../iperf, install_iperf: no, run_server: true }
+
+- hosts: '{{ hosts }}'
+  tasks:
+    - name: remove latest data
+      file:
+        path: /tmp/iperf_output.log
+        state: absent
+
+    - name: run iperf TCP_sin_10_rx
+      shell: cd /tmp/iperf/src && ./iperf -c {{ groups['SlaveDevice'][0] }} -f M -i 1 -t 100 -P 4 -w 256k
+      register: logdata
+      ignore_errors: yes
+
+    - lineinfile: create=yes dest=/tmp/iperf_output.log line="{{ logdata.stdout }}" state=present
+
+    - name: fetch result
+      fetch:
+        src: /tmp/iperf_output.log
+        dest: /tmp/iperf_output.log
+        flat: yes
+
+- hosts: SlaveDevice
+  tasks:
+    - name: stop server
+      shell: killall iperf
+      ignore_errors: yes
