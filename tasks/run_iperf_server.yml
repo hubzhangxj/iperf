@@ -1,4 +1,27 @@
-- name: start server
+- name: get service status
+  shell: "ps -aux  | grep -v grep | grep  'iperf -s'"
+  register: result
+
+- name: judge if service had been execute
+  shell: "echo iperf server had been setup"
+  async: 5
+  ignore_errors: yes
+  when: result.stdout.find('iperf -s') != -1
+
+- name: startup server
   shell: "cd /tmp/iperf/src && ./iperf -s &"
   async: 5
   ignore_errors: yes
+  when: result.stdout.find('iperf -s') == -1
+
+
+
+
+
+
+
+
+
+
+
+

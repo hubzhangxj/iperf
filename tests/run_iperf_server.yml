@@ -1,0 +1,10 @@
+- name: judge if service had been execute
+  shell: "ps -aux  | grep -v grep | grep  'iperf -s'"
+  register: result
+
+- name: startup server
+  shell: "cd /tmp/iperf/src && ./iperf -s &"
+  async: 5
+  ignore_errors: yes
+  when: result.stdout.find('iperf -s') != -1
+
