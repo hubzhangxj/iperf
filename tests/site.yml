@@ -5,6 +5,6 @@
     - { role: ../../iperf, install_iperf: true, run_server: no}
 
 - name: Install iperf on SlaveDevice
-  hosts: SlaveDevice
+  hosts: SlaveDevice 
   roles:
     - { role: ../../iperf, install_iperf: true, run_server: no}
